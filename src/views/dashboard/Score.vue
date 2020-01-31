@@ -2,19 +2,18 @@
   <div class="container">
     <template v-if="teamData !== null">
       <div class="row">
-        <div class="col">
-          <p class="h1 font-weight-bold m-0">{{ teamData.team_name }}</p>
-          <p>{{ teamData.participants.length }} Participants</p>
-          <hr />
+        <div class="col d-flex">
+          <v-btn fab text @click="goBack()">
+            <v-icon>arrow_back</v-icon>
+          </v-btn>
+          <div class="pl-2">
+            <p class="h1 font-weight-bold m-0">{{ teamData.team_name }}</p>
+            <p>{{ teamData.participants.length }} Participants</p>
+          </div>
         </div>
       </div>
 
       <template v-if="teamData.participants.length > 0">
-        <div class="row">
-          <div class="col">
-            <p class="h4 m-0">Participants</p>
-          </div>
-        </div>
         <div class="row">
           <div
             class="col-md-4"
@@ -34,8 +33,51 @@
         </div>
       </template>
 
-      <template></template>
+      <hr />
 
+      <template>
+        <div class="row">
+          <div class="col">
+            <p class="h4 m-0">Review</p>
+          </div>
+        </div>
+
+        <v-form @submit.prevent="submitReview" class="mb-5">
+          <template v-if="criterias !== null">
+            <div
+              class="row"
+              v-for="(criteria, index) in criterias"
+              :key="criteria.id"
+            >
+              <div class="col">
+                <v-card>
+                  <v-card-title>
+                    {{ criteria.description }}
+                  </v-card-title>
+                  <v-card-text>
+                    <v-select
+                      v-model="selections[index]"
+                      :items="criteria.options"
+                      item-text="description"
+                      return-object
+                      clearable
+                      label="Score"
+                      outlined
+                      aria-required
+                    ></v-select>
+                  </v-card-text>
+                </v-card>
+              </div>
+            </div>
+          </template>
+
+          <div class="row">
+            <div class="col">
+              <v-btn color="primary" type="submit" block>submit review</v-btn>
+            </div>
+          </div>
+        </v-form>
+      </template>
     </template>
 
     <template v-else>
@@ -60,11 +102,20 @@ export default {
   beforeMount: function() {
     this.teamId = this.$route.params.teamId;
     this.getTeamData();
+    this.getCriterias();
   },
 
   data: () => ({
     teamId: null,
-    teamData: null
+    teamData: null,
+    feasibility: null,
+    scalability: null,
+    innovative: null,
+    basedOnTheme: null,
+    prototype: null,
+    originality: null,
+    criterias: null,
+    selections: []
   }),
 
   methods: {
@@ -74,7 +125,43 @@ export default {
         .then(response => {
           this.teamData = response.data;
         })
-        .catch(console.log);
+        .catch(() => {
+          this.teamData = null;
+        });
+    },
+    getCriterias() {
+      this.$http
+        .get(urls.getCriteria)
+        .then(response => {
+          this.criterias = response.data;
+        })
+        .catch(() => {
+          this.criterias = null;
+        });
+    },
+    submitReview() {
+      let criterias = [];
+
+      for (let i = 0; i < this.selections; i++) {
+        if (typeof this.selections[i] === "object") {
+          criterias.push(this.selections[i]);
+        }
+      }
+
+      this.$http
+        .post(urls.submitReview(this.teamId), {
+          criterias
+        })
+        .then(() => {
+          this.$router.push({ name: "home" });
+          this.$toastr.s("Review Submitted Successfully!");
+        })
+        .catch(() => {
+          this.$toastr.e("Error in submitting review");
+        });
+    },
+    goBack() {
+      this.$router.go(-1);
     }
   }
 };

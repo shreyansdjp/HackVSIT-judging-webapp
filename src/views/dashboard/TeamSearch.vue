@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col">
         <p class="h1">Team Search</p>
-
         <hr />
       </div>
     </div>
@@ -17,7 +16,7 @@
             placeholder="Search Team"
           ></v-text-field>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 d-flex justify-content-center">
           <v-btn fab text type="submit">
             <v-icon>search</v-icon>
           </v-btn>
@@ -50,7 +49,21 @@
             </v-card>
           </div>
         </template>
-        <template v-else></template>
+
+        <template v-else>
+          <div class="col">
+            <v-card>
+              <v-card-text>
+                No Teams for the related query.
+              </v-card-text>
+            </v-card>
+          </div>
+        </template>
+      </template>
+      <template v-else-if="loading">
+        <div class="col d-flex justify-content-center pa-12 ma-12">
+          <v-progress-circular indeterminate color="primary" />
+        </div>
       </template>
     </div>
   </div>
@@ -64,17 +77,24 @@ export default {
 
   data: () => ({
     query: "",
-    teams: null
+    teams: null,
+    loading: false
   }),
 
   methods: {
     getTeams() {
+      this.loading = true;
+      this.teams = null;
       this.$http
         .get(urls.getTeams(this.query))
         .then(response => {
+          this.loading = false;
           this.teams = response.data;
         })
-        .catch(console.log);
+        .catch(() => {
+          this.loading = false;
+          this.teams = [];
+        });
     }
   }
 };

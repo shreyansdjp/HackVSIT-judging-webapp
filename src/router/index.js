@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
+import { getAuthInfo } from "@/shared/helpers";
 
 Vue.use(VueRouter);
 
@@ -8,7 +9,15 @@ const routes = [
   {
     path: "/",
     name: "login",
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      if (getAuthInfo()) {
+        next({
+          name: "home"
+        });
+      }
+      next();
+    }
   },
   {
     path: "/home",
@@ -24,7 +33,13 @@ const routes = [
         name: "review",
         component: () => import("@/views/dashboard/Score.vue")
       }
-    ]
+    ],
+    beforeEnter: (to, from, next) => {
+      if (!getAuthInfo()) {
+        next("/");
+      }
+      next();
+    }
   }
 ];
 
