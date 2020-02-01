@@ -38,7 +38,7 @@
       <template>
         <div class="row">
           <div class="col">
-            <p class="h4 m-0">Review</p>
+            <p class="h4">Review</p>
           </div>
         </div>
 
