@@ -142,7 +142,7 @@ export default {
     submitReview() {
       let criterias = [];
 
-      for (let i = 0; i < this.selections; i++) {
+      for (let i = 0; i < this.selections.length; i++) {
         if (typeof this.selections[i] === "object") {
           criterias.push(this.selections[i]);
         }
