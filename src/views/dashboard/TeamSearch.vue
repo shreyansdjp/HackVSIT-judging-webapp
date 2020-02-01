@@ -27,7 +27,7 @@
     <div class="row">
       <template v-if="teams !== null">
         <template v-if="teams.length > 0">
-          <div class="col-md-4" v-for="team in teams" :key="team.id">
+          <div class="col-md-4 mb-2" v-for="team in teams" :key="team.id">
             <v-card>
               <v-card-text>
                 <p class="h4 text-dark m-0 font-weight-bold">

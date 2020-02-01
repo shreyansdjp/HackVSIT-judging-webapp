@@ -16,7 +16,7 @@
       <template v-if="teamData.participants.length > 0">
         <div class="row">
           <div
-            class="col-md-4"
+            class="col-md-4 mb-2"
             v-for="participant in teamData.participants"
             :key="participant.id"
           >
