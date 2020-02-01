@@ -16,7 +16,7 @@
       <template v-if="teamData.participants.length > 0">
         <div class="row">
           <div
-            class="col-md-4 mb-2"
+            class="col-md-4"
             v-for="participant in teamData.participants"
             :key="participant.id"
           >
@@ -45,7 +45,7 @@
         <v-form @submit.prevent="submitReview" class="mb-5">
           <template v-if="criterias !== null">
             <div
-              class="row"
+              class="row mb-5"
               v-for="(criteria, index) in criterias"
               :key="criteria.id"
             >
