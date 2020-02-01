@@ -10,7 +10,9 @@
         Logout
       </v-btn>
     </v-toolbar>
-    <router-view></router-view>
+    <div class="container my-4">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
