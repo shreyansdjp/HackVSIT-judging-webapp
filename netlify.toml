@@ -1,0 +1,8 @@
+# COMMENT: This a rule for Single Page Applications
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  VUE_APP_BASEURL = "https://hackvsit-judge.herokuapp.com"
